@@ -191,21 +191,20 @@ style.textContent = `
     position: relative;
     display: inline-block;
     width: 250px;
-    border: 1px solid #ccc;
+    border: 1px solid white;
     border-radius: 4px;
   }
   .custom-select-trigger {
     padding: 8px;
-    background-color: #f1f1f1;
     cursor: pointer;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid white;
   }
   .custom-select-dropdown {
     display: none;
     box-sizing: border-box;
     position: absolute;
-    background-color: white;
-    border: 1px solid #ccc;
+    background-color: transparent;
+    border: 1px solid white;
     z-index: 1;
     width: 100%;
     max-height: 200px;
@@ -221,7 +220,8 @@ style.textContent = `
     cursor: pointer;
   }
   .custom-select-option:hover {
-    background-color: #f1f1f1;
+    background-color: #d1d1d1;
+    color: black;
   }
   .selected-options {
     display: flex;
@@ -236,11 +236,13 @@ style.textContent = `
     display: block;
   }
   .custom-select-search-input {
+   background-color: transparent;
+   color: white;
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border: none;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid white;
   }
 `;
 document.head.appendChild(style);
