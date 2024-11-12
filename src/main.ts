@@ -20,6 +20,8 @@ $("#app").html(`
 
       <button type="submit">Submit</button>
       <button type="button" id="check">Check</button>
+      <button type="button" id="empty-checkboxes">Empty checkboxes</button>
+      <button type="button" id="empty-select-options">Empty select options</button>
   </form>
 `);
 
@@ -27,7 +29,10 @@ function setupCustomSelect(selectId: string) {
     const $selectMultiple = $(`#${selectId}`);
     if ($selectMultiple.length === 0) return;
 
-    const $customSelect = $("<div>", { id: "custom-select", class: "custom-select-container" });
+    const $customSelect = $("<div>", {
+        id: "custom-select",
+        class: "custom-select-container",
+    });
     $selectMultiple.after($customSelect);
 
     const $trigger = $("<div>", { class: "custom-select-trigger" });
@@ -45,13 +50,38 @@ function setupCustomSelect(selectId: string) {
     $options.each((_, option) => {
         const $option = $(option);
         const $optionContainer = $("<div>", { class: "custom-select-option" });
-        const $checkbox = $("<input>", { type: "checkbox", value: $option.val(), id: $option.val(), checked: $option.is(":selected") });
-        const $label = $("<label>", { for: $option.val(), text: $option.text() });
+        const $checkbox = $("<input>", {
+            type: "checkbox",
+            value: $option.val(),
+            id: $option.val(),
+            checked: $option.is(":selected"),
+        });
+        const $label = $("<label>", {
+            for: $option.val(),
+            text: $option.text(),
+        });
 
-        // Add event listener to update the select element when checkbox is changed
-        $optionContainer.on("click", () => {
-            $checkbox.prop("checked", !$checkbox.prop("checked"));
+        // Add event listener to update the checkbox when the select element is changed
+        const handleChangeCheckbox = () => {
             $option.prop("selected", $checkbox.prop("checked"));
+            updateTriggerContent();
+        };
+
+        $optionContainer.on("click", (event) => {
+            // Only trigger the checkbox change event if the click event was not on the checkbox itself
+            if (!$(event.target).is($checkbox)) {
+                $checkbox.prop("checked", !$checkbox.prop("checked"));
+                $checkbox.trigger("change");
+            }
+        });
+
+        $checkbox.on("change", (event) => {
+            event.stopPropagation();
+            handleChangeCheckbox();
+        });
+
+        $option.on("change", () => {
+            $checkbox.prop("checked", $option.is(":selected"));
             updateTriggerContent();
         });
 
@@ -66,27 +96,41 @@ function setupCustomSelect(selectId: string) {
 
     // Close the dropdown if clicked outside
     $(document).on("click", (event) => {
-        if (!$customSelect.is(event.target) && $customSelect.has(event.target).length === 0) {
+        if (
+            !$customSelect.is(event.target) &&
+            $customSelect.has(event.target).length === 0
+        ) {
             $dropdown.removeClass("show");
         }
     });
 
     // Function to update the trigger text with selected options
     const updateTriggerContent = () => {
-        const selectedOptions = $options.filter(":selected").map((_, option) => $(option).text()).get();
+        const selectedOptions = $options
+            .filter(":selected")
+            .map((_, option) => $(option).text())
+            .get();
         if (selectedOptions.length === 0) {
             $trigger.text("Select options");
         } else {
-            const toAppend = selectedOptions.map(option => `<div class="selected-option">${option}</div>`);
-            $trigger.html(`<div class="selected-options">${toAppend.join("")}</div>`);
+            const toAppend = selectedOptions.map(
+                (option) => `<div class="selected-option">${option}</div>`
+            );
+            $trigger.html(
+                `<div class="selected-options">${toAppend.join("")}</div>`
+            );
         }
     };
 
     // Initialize the trigger text
     updateTriggerContent();
 
-    // Search in the dropdown 
-    const $searchInput = $("<input>", { type: "text", placeholder: "Search...", class: "custom-select-search-input" });
+    // Search in the dropdown
+    const $searchInput = $("<input>", {
+        type: "text",
+        placeholder: "Search...",
+        class: "custom-select-search-input",
+    });
 
     $searchInput.on("input", () => {
         const query = $searchInput.val()!.toString().toLowerCase();
@@ -105,11 +149,13 @@ function setupCustomSelect(selectId: string) {
     $dropdown.prepend($searchInput);
 
     const getCurrentState = () => {
-        return $options.map((_, option) => ({
-            label: option.label,
-            value: option.value,
-            selected: option.selected,
-        })).get();
+        return $options
+            .map((_, option) => ({
+                label: option.label,
+                value: option.value,
+                selected: option.selected,
+            }))
+            .get();
     };
 
     return { getCurrentState };
@@ -126,6 +172,15 @@ $("#my-form").on("submit", (event) => {
 $("#check").on("click", () => {
     console.log(result1?.getCurrentState());
     console.log(result2?.getCurrentState());
+});
+
+// Deselect all checkboxes
+$("#empty-checkboxes").on("click", () => {
+    $("input[type='checkbox']").prop("checked", false).trigger("change");
+});
+
+$("#empty-select-options").on("click", () => {
+  $("option").prop("selected", false).trigger("change");
 });
 
 // Add some basic styles
