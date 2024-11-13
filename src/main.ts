@@ -57,7 +57,6 @@ function setupCustomSelect(selectId: string) {
             checked: $option.is(":selected"),
         });
         const $label = $("<label>", {
-            for: $option.val(),
             text: $option.text(),
         });
 
