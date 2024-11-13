@@ -186,24 +186,38 @@ $("#empty-select-options").on("click", () => {
 const style = document.createElement("style");
 
 style.textContent = `
+    button {
+        background-color: transparent;
+        border-radius: 4px;
+        border: 2px solid black;
+        height: 35px;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
+        box-sizing: border-box;
+    }
+
+    button:hover {
+        background-color: blue;
+        color: white;
+    }
+
   .custom-select-container {
     position: relative;
     display: inline-block;
     width: 250px;
-    border: 1px solid white;
-    border-radius: 4px;
+    border: 1px solid #ccc;
   }
   .custom-select-trigger {
     padding: 8px;
     cursor: pointer;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #ccc;
   }
   .custom-select-dropdown {
     display: none;
     box-sizing: border-box;
     position: absolute;
-    background-color: transparent;
-    border: 1px solid white;
+    background-color: white;
+    border: 1px solid #ccc;
     z-index: 1;
     width: 100%;
     max-height: 200px;
@@ -219,8 +233,7 @@ style.textContent = `
     cursor: pointer;
   }
   .custom-select-option:hover {
-    background-color: #d1d1d1;
-    color: black;
+    background-color: #f1f1f1;
   }
   .selected-options {
     display: flex;
@@ -235,13 +248,11 @@ style.textContent = `
     display: block;
   }
   .custom-select-search-input {
-   background-color: transparent;
-   color: white;
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
     border: none;
-    border-bottom: 1px solid white;
+    border-bottom: 1px solid #ccc;
   }
 `;
 document.head.appendChild(style);
